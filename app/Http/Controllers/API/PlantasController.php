@@ -118,5 +118,21 @@ class PlantasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
- 
+    public function destroy($id)
+    {
+        $planta = Planta::find($id);
+
+        if (!$planta) {
+            return response()->json(['message' => 'Planta no encontrada'], 404);
+        }
+
+        // Eliminar la imagen asociada, si existe
+        if ($planta->foto_path) {
+            Storage::delete('public/' . $planta->foto_path);
+        }
+
+        $planta->delete();
+
+        return response()->json(['message' => 'Planta eliminada con éxito'], 200);
+    }
 }
